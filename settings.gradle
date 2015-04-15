@@ -1,0 +1,13 @@
+include ':toaster'
+include ':toaster-config'
+include ':toaster-consumer'
+include ':toaster-provider'
+include ':toaster-it'
+include ':clustering-test-app:configuration'
+include ':clustering-test-app:model'
+include ':clustering-test-app:provider'
+
+// Change project name so archive name matches maven build.
+// Unfortunately, this can't be done (yet) in the subproject build.gradle file.
+project(":toaster").name				= "sample-toaster"
+project(":clustering-test-app:configuration").name	= "clustering-it-config"

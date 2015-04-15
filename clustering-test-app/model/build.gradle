@@ -1,0 +1,15 @@
+version		= '1.2.0-SNAPSHOT'
+
+yang {
+  generator {
+    generatorClassName	= "com.att.opnfv.yang.gradle.CodeGeneratorImpl"
+    outputDir 		= yangGenDir
+  }
+}
+
+dependencies {
+  compile "com.google.guava:guava:18.0"
+  compile "org.opendaylight.yangtools:yang-binding:latest.integration"
+  yangfiles "org.opendaylight.yangtools.model:ietf-inet-types:2010.09.24.7-SNAPSHOT"
+  yangfiles "org.opendaylight.yangtools.model:yang-ext:2013.09.07.7-SNAPSHOT"
+}

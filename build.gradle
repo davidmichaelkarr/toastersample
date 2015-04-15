@@ -1,0 +1,57 @@
+buildscript {
+  repositories {
+    jcenter()
+    mavenCentral()
+    mavenLocal()
+  }
+	
+  dependencies {
+    classpath "com.att.opnfv.yang:GradleYangPlugin:1.0.0-SNAPSHOT"
+  }
+}
+
+task wrapper(type: Wrapper) {
+   gradleVersion = '2.3' //version required
+}
+
+subprojects {
+  apply plugin: 'maven'
+  apply plugin: 'java'
+
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+    maven { url "http://oss.sonatype.org/content/repositories/releases/" }
+    maven {
+      url "http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot"
+    }
+    maven {
+      url "http://nexus.opendaylight.org/content/repositories/opendaylight.release"
+    }
+  }
+
+  configurations {
+    yangfiles
+  }
+
+  ext {
+    yangGenDir	= "${project.buildDir}/yang-gen-sal"
+  }
+
+  dependencies {
+    testCompile 'junit:junit:4.11'
+    yangfiles "org.opendaylight.controller:config-api:0.3.0-SNAPSHOT"
+    yangfiles "org.opendaylight.controller:sal-binding-config:1.2.0-SNAPSHOT"
+  }
+}
+
+configure([project(":sample-toaster"), project(":toaster-consumer"),
+	   project(":toaster-provider"), project(":clustering-test-app:model"),
+	   project(":clustering-test-app:provider")]) {
+  apply plugin: 'com.att.opnfv.yang.gradle'
+  yang {
+    inspectDependencies true
+    yangFilesConfiguration "yangfiles"
+  }
+}

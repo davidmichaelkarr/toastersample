@@ -1,0 +1,22 @@
+version		= '1.2.0-SNAPSHOT'
+
+yang {
+  generator {
+    generatorClassName	= "com.att.opnfv.yang.gradle.CodeGeneratorImpl"
+    outputDir 		= yangGenDir
+  }
+  generator {
+    generatorClassName	= "com.att.opnfv.yang.gradle.JMXGenerator"
+    outputDir 		= yangGenDir
+    additionalConfiguration	=
+      ["namespaceToPackage1":"urn:opendaylight:params:xml:ns:yang:controller==org.opendaylight.controller.config.yang"]
+  }
+}
+
+dependencies {
+  compile project(":clustering-test-app:model")
+  compile "com.google.guava:guava:18.0"
+  compile "org.opendaylight.controller:sal-binding-api:1.2.0-SNAPSHOT"
+  compile "org.opendaylight.controller:config-api:0.3.0-SNAPSHOT"
+  compile "org.opendaylight.yangtools:binding-data-codec:0.7.0-SNAPSHOT"
+}

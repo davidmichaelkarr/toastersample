@@ -1,0 +1,27 @@
+apply plugin: 'osgi'
+
+group		= 'org.opendaylight.controller.samples'
+version		= '1.2.0-SNAPSHOT'
+
+yang {
+  generator {
+    generatorClassName	= "com.att.opnfv.yang.gradle.CodeGeneratorImpl"
+    outputDir 		= yangGenDir
+  }
+  generator {
+    generatorClassName	= "com.att.opnfv.yang.gradle.JMXGenerator"
+    outputDir 		= yangGenDir
+    additionalConfiguration	=
+      ["namespaceToPackage1":"urn:opendaylight:params:xml:ns:yang:controller==org.opendaylight.controller.config.yang"]
+  }
+}
+
+dependencies {
+  compile project(":sample-toaster")
+  compile "org.opendaylight.yangtools:binding-java-api-generator:0.7.0-SNAPSHOT"
+  compile "org.opendaylight.controller:config-api:0.3.0-SNAPSHOT"
+  compile "org.opendaylight.controller:sal-binding-api:1.2.0-SNAPSHOT"
+  compile "org.opendaylight.yangtools:binding-data-codec:0.7.0-SNAPSHOT"
+  yangfiles "org.opendaylight.controller:config-api:0.3.0-SNAPSHOT"
+  yangfiles "org.opendaylight.controller:sal-binding-config:1.2.0-SNAPSHOT"
+}

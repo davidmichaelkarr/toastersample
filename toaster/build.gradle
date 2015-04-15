@@ -1,0 +1,15 @@
+apply plugin: 'osgi'
+
+group		= 'org.opendaylight.controller.samples'
+version		= '1.2.0-SNAPSHOT'
+
+yang {
+  generator {
+    generatorClassName	= "com.att.opnfv.yang.gradle.CodeGeneratorImpl"
+    outputDir 		= yangGenDir
+  }
+}
+
+dependencies {
+  compile "org.opendaylight.yangtools:binding-java-api-generator:0.7.0-SNAPSHOT"
+}
