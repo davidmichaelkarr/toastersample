@@ -41,3 +41,30 @@ dependencies {
   testCompile "org.opendaylight.controller:sal-binding-it:latest.integration"
   testCompile "org.opendaylight.yangtools.model:yang-ext:latest.integration"
 }
+
+// Without refactoring the source code of the project, this excludes the one test that looks like a unit test, but is
+// actually an integration test.
+test { exclude '**/*.*' }
+
+sourceSets {
+	integTest {
+		java.srcDir file("src/test/java")
+		resources.srcDir file("src/test/resources")
+		runtimeClasspath = output + compileClasspath
+	}
+}
+
+dependencies {
+	integTestCompile sourceSets.main.output
+	integTestCompile configurations.testCompile
+	integTestCompile sourceSets.test.output
+	integTestRuntime configurations.testRuntime
+}
+
+task integTest(type: Test) {
+	testClassesDir	= sourceSets.integTest.output.classesDir
+	classpath 		= sourceSets.integTest.runtimeClasspath
+	// This forces integration tests to always run if the task is run.
+	outputs.upToDateWhen { false }
+}
+
