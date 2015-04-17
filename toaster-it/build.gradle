@@ -1,70 +1,60 @@
 buildscript {
-  repositories {
-    jcenter()
-    mavenCentral()
-    mavenLocal()
-  }
+	repositories {
+		jcenter()
+		mavenCentral()
+		mavenLocal()
+	}
+	dependencies {
+		classpath 'org.unbroken-dome.gradle-plugins:gradle-testsets-plugin:1.0.2'
+	}
 }
 
 apply plugin: 'maven'
 apply plugin: 'java'
+apply plugin: 'org.unbroken-dome.test-sets'
 
 group		= 'org.opendaylight.controller.samples'
 version		= '1.2.0-SNAPSHOT'
 
 repositories {
-  mavenLocal()
-  mavenCentral()
-  jcenter()
-  maven { url "http://oss.sonatype.org/content/repositories/releases/" }
-  maven {
-    url "http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot"
-  }
-  maven {
-    url "http://nexus.opendaylight.org/content/repositories/opendaylight.release"
-  }
+	mavenLocal()
+	mavenCentral()
+	jcenter()
+	maven { url "http://oss.sonatype.org/content/repositories/releases/" }
+	maven {
+		url "http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot"
+	}
+	maven {
+		url "http://nexus.opendaylight.org/content/repositories/opendaylight.release"
+	}
 }
 
 dependencies {
-  compile project(":sample-toaster")
-  compile project(":toaster-consumer")
-  compile project(":toaster-provider")
-  compile "org.opendaylight.yangtools:binding-java-api-generator:0.7.0-SNAPSHOT"
-  compile "org.opendaylight.controller:config-api:0.3.0-SNAPSHOT"
-  compile "org.opendaylight.controller:sal-binding-api:1.2.0-SNAPSHOT"
-  compile "org.opendaylight.yangtools:binding-data-codec:0.7.0-SNAPSHOT"
-  testCompile 'junit:junit:4.11'
-  testCompile "org.ops4j.pax.exam:pax-exam-junit4:latest.integration"
-  testCompile "org.ops4j.pax.exam:pax-exam-container-native:latest.integration"
-  testCompile "org.ops4j.pax.exam:pax-exam-link-mvn:latest.integration"
-  testCompile "javax.inject:javax.inject:latest.integration"
-  testCompile "org.opendaylight.controller:sal-binding-it:latest.integration"
-  testCompile "org.opendaylight.yangtools.model:yang-ext:latest.integration"
+	compile project(":sample-toaster")
+	compile project(":toaster-consumer")
+	compile project(":toaster-provider")
+	compile "org.opendaylight.yangtools:binding-java-api-generator:0.7.0-SNAPSHOT"
+	compile "org.opendaylight.controller:config-api:0.3.0-SNAPSHOT"
+	compile "org.opendaylight.controller:sal-binding-api:1.2.0-SNAPSHOT"
+	compile "org.opendaylight.yangtools:binding-data-codec:0.7.0-SNAPSHOT"
+	testCompile 'junit:junit:4.11'
+	testCompile "org.ops4j.pax.exam:pax-exam-junit4:latest.integration"
+	testCompile "org.ops4j.pax.exam:pax-exam-container-native:latest.integration"
+	testCompile "org.ops4j.pax.exam:pax-exam-link-mvn:latest.integration"
+	testCompile "javax.inject:javax.inject:latest.integration"
+	testCompile "org.opendaylight.controller:sal-binding-it:latest.integration"
+	testCompile "org.opendaylight.yangtools.model:yang-ext:latest.integration"
 }
 
 // Without refactoring the source code of the project, this excludes the one test that looks like a unit test, but is
 // actually an integration test.
 test { exclude '**/*.*' }
 
-sourceSets {
-	integTest {
-		java.srcDir file("src/test/java")
-		resources.srcDir file("src/test/resources")
-		runtimeClasspath = output + compileClasspath
-	}
+testSets {
+	integTest
 }
 
-dependencies {
-	integTestCompile sourceSets.main.output
-	integTestCompile configurations.testCompile
-	integTestCompile sourceSets.test.output
-	integTestRuntime configurations.testRuntime
-}
-
-task integTest(type: Test) {
-	testClassesDir	= sourceSets.integTest.output.classesDir
-	classpath 		= sourceSets.integTest.runtimeClasspath
+project.integTest {
 	// This forces integration tests to always run if the task is run.
 	outputs.upToDateWhen { false }
 }
-
